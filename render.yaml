@@ -1,7 +1,9 @@
 services:
   - type: web
-    name: express-app
-    runtime: node
-    buildCommand: npm install
-    startCommand: node src/main.js
+    name: expressjs-notesapi
     env: node
+    buildCommand: npm install
+    startCommand: node main.js
+    envVars:
+      - key: MONGO_URL
+        value: "mongodb+srv://Express:express12345@cluster0.xmh7s.mongodb.net/myDataBase?retryWrites=true&w=majority"
