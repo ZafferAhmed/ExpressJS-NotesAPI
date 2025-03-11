@@ -3,5 +3,5 @@ services:
     name: express-app
     runtime: node
     buildCommand: npm install
-    startCommand: node index.js
+    startCommand: node src/main.js
     env: node
