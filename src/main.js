@@ -12,7 +12,17 @@ const swaggerJsdoc = require("swagger-jsdoc");
 
 app.use(express.json());
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    // allowedHeaders: ["Content-Type", "Authorization"],
+    // credentials: true,
+    // optionsSuccessStatus: 200,
+    // preflightContinue: false,
+    // exposedHeaders: ["Set-Cookie"],
+  })
+);
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use("/users", userRouter);
@@ -31,6 +41,15 @@ const swaggerOptions = {
       { name: "Notes", description: "Operations related to notes" },
     ],
     servers: [{ url: "http://localhost:3000" }],
+    components: {
+      securitySchemes: {
+        BearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
+      },
+    },
   },
   apis: ["./src/Routes/*.js"],
 };

@@ -48,7 +48,6 @@ const signIn = async (req, res) => {
   const { email, password } = req.body;
   try {
     const existingUser = await userModels.findOne({ email: email });
-    console.log("existingUser: ", existingUser);
     if (!existingUser) {
       return res.status(404).json({ message: "User Not Found" });
     }

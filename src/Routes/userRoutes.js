@@ -1,13 +1,6 @@
-/**
- * @module userRoutes
- * @description CRUD routes for users
- * @author Shafi
- * @date 25/09/2021
- */
-
 const express = require("express");
-const { signIn, signUp } = require("../controllers/userControllers");
 const userRoutes = express.Router();
+const { signUp, signIn } = require("../controllers/userControllers");
 
 /**
  * @swagger
@@ -20,7 +13,8 @@ const userRoutes = express.Router();
  * /users/signup:
  *   post:
  *     summary: Register a new user
- *     tags: [Users]
+ *     tags:
+ *       - Users
  *     requestBody:
  *       required: true
  *       content:
@@ -32,13 +26,17 @@ const userRoutes = express.Router();
  *                 type: string
  *               password:
  *                 type: string
+ *               email:
+ *                 type: string
  *     responses:
  *       200:
- *         description: User registered successfully
+ *         description: User signed up successfully
  *       400:
- *         description: Bad request - username or password is missing
- *       500:
- *         description: Internal server error
+ *         description: Bad request - email or password is missing
+ *       401:
+ *         description: Unauthorized - Invalid token
+ *     security:
+ *       - BearerAuth: []
  */
 userRoutes.post("/signup", signUp);
 
@@ -47,7 +45,8 @@ userRoutes.post("/signup", signUp);
  * /users/signin:
  *   post:
  *     summary: Sign in a user
- *     tags: [Users]
+ *     tags:
+ *       - Users
  *     requestBody:
  *       required: true
  *       content:
@@ -55,19 +54,22 @@ userRoutes.post("/signup", signUp);
  *           schema:
  *             type: object
  *             properties:
- *               email:
+ *               username:
  *                 type: string
  *               password:
  *                 type: string
- *       responses:
- *          200:
- *              description: User signed in successfully
- *          400:
- *              description: Bad request - email or password is missing
- *          404:
- *              description: User not found
- *          500:
- *              description: Internal server error
+ *               email:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: User signed in successfully
+ *       400:
+ *         description: Bad request - email or password is missing
+ *       401:
+ *         description: Unauthorized - Invalid token
+ *     security:
+ *       - BearerAuth: []
  */
 userRoutes.post("/signin", signIn);
+
 module.exports = userRoutes;

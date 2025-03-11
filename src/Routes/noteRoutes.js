@@ -12,6 +12,7 @@ const auth = require("../middleWares/auth");
  * @swagger
  * tags:
  *   - name: Notes
+ *     description: API for managing notes
  */
 
 /**
@@ -19,9 +20,10 @@ const auth = require("../middleWares/auth");
  * /notes:
  *   get:
  *     summary: Get all notes
- *     tags: [Notes]
+ *     tags: 
+ *       - Notes
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: []
  *     responses:
  *       200:
  *         description: Successfully retrieved all notes
@@ -37,9 +39,10 @@ noteRoutes.get("/", auth, getNotes);
  * /notes:
  *   post:
  *     summary: Create a new note
- *     tags: [Notes]
+ *     tags: 
+ *       - Notes
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -68,9 +71,10 @@ noteRoutes.post("/", auth, createNote);
  * /notes/{id}:
  *   put:
  *     summary: Update a note completely
- *     tags: [Notes]
+ *     tags: 
+ *       - Notes
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -80,14 +84,14 @@ noteRoutes.post("/", auth, createNote);
  *         description: ID of the note to update
  *     requestBody:
  *       required: true
- *       content:
+ *       description:
  *         application/json:
  *           schema:
  *             type: object
  *             properties:
  *               title:
  *                 type: string
- *               content:
+ *               description:
  *                 type: string
  *     responses:
  *       200:
@@ -108,9 +112,10 @@ noteRoutes.put("/:id", auth, updateNotes);
  * /notes/{id}:
  *   patch:
  *     summary: Partially update a note
- *     tags: [Notes]
+ *     tags: 
+ *       - Notes
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -127,8 +132,10 @@ noteRoutes.put("/:id", auth, updateNotes);
  *             properties:
  *               title:
  *                 type: string
- *               content:
+ *                 description: Updated title of the note
+ *               description:
  *                 type: string
+ *                 description: Updated description of the note
  *     responses:
  *       200:
  *         description: Note partially updated successfully
@@ -148,9 +155,10 @@ noteRoutes.patch("/:id", auth, updateNotes);
  * /notes/{id}:
  *   delete:
  *     summary: Delete a note
- *     tags: [Notes]
+ *     tags: 
+ *       - Notes
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
