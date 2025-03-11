@@ -14,13 +14,9 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: "*",
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-    // allowedHeaders: ["Content-Type", "Authorization"],
-    // credentials: true,
-    // optionsSuccessStatus: 200,
-    // preflightContinue: false,
-    // exposedHeaders: ["Set-Cookie"],
+    origin: "*", // You can replace "*" with your frontend domain if needed
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
@@ -40,7 +36,9 @@ const swaggerOptions = {
       { name: "Users", description: "Operations related to users" },
       { name: "Notes", description: "Operations related to notes" },
     ],
-    servers: [{ url: "http://localhost:3000" }],
+    servers: [
+      { url: "https://expressjs-notesapi.onrender.com" }, // ✅ Add "https://"
+    ],
     components: {
       securitySchemes: {
         BearerAuth: {
