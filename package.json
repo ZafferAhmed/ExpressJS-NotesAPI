@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --ignore 'node_modules/' --ignore 'package-lock.json' src/main.js"
+    "start": "node index.js"
   },
   "ignore": [
     "node_modules",

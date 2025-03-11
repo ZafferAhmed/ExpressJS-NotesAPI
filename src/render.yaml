@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: express-app
+    runtime: node
+    buildCommand: npm install
+    startCommand: node index.js
+    env: node
