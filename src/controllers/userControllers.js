@@ -3,77 +3,112 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const SECURE_KEY = process.env.SECURE_KEY;
 
+const isValidEmail = (email) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
+
 const signUp = async (req, res) => {
-  const { username, email, password } = req.body;
+  let { username, email, password } = req.body;
+
+  username = username?.trim();
+  email = email?.trim();
+  password = password?.trim();
+
   if (!username || !email || !password) {
     return res.status(400).json({ message: "All fields are required" });
   }
+
+  if (!isValidEmail(email)) {
+    return res.status(400).json({ message: "Invalid email format" });
+  }
+
   try {
-    const existinUser = await userModels.findOne({ email: email });
-    if (existinUser) {
-      return res.status(400).json({ message: "User already exist" });
+    const existingUser = await userModels.findOne({ email });
+
+    if (existingUser) {
+      return res.status(400).json({ message: "User already exists" });
     }
 
-    const hassedPassword = bcrypt.hashSync(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    const newUser = await new userModels({
-      email: email,
-      password: hassedPassword,
-      username: username,
+    const newUser = new userModels({
+      username,
+      email,
+      password: hashedPassword,
     });
 
-    await newUser.save(); // Save's the user to the database, this line is very important.
+    await newUser.save();
 
     const token = jwt.sign(
-      {
-        email: newUser.email,
-        id: newUser._id,
-      },
+      { email: newUser.email, id: newUser._id },
       SECURE_KEY,
       { expiresIn: "1h" }
     );
 
     res.status(201).json({
-      message: "User Created Successfully",
-      user: newUser,
-      token: token,
+      message: "User registered successfully",
+      user: {
+        id: newUser._id,
+        username: newUser.username,
+        email: newUser.email,
+      },
+      token,
     });
   } catch (error) {
-    console.log("Error: ", error);
-    res.status(500).json({ message: "Something went wrong" });
+    console.error("Signup Error:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
 const signIn = async (req, res) => {
-  const { email, password } = req.body;
+  let { email, password } = req.body;
+
+  email = email?.trim();
+  password = password?.trim();
+
+  if (!email || !password) {
+    return res.status(400).json({ message: "Email and password are required" });
+  }
+
+  if (!isValidEmail(email)) {
+    return res.status(400).json({ message: "Invalid email format" });
+  }
+
   try {
-    const existingUser = await userModels.findOne({ email: email });
+    const existingUser = await userModels.findOne({ email });
+
     if (!existingUser) {
-      return res.status(404).json({ message: "User Not Found" });
+      return res.status(404).json({ message: "User not found" });
     }
 
-    const matchPassWord = await bcrypt.compare(password, existingUser.password);
-    if (!matchPassWord) {
-      return res.status(400).json({ message: "Invalid Credentials" });
+    const isPasswordCorrect = await bcrypt.compare(
+      password,
+      existingUser.password
+    );
+
+    if (!isPasswordCorrect) {
+      return res.status(400).json({ message: "Invalid credentials" });
     }
 
     const token = jwt.sign(
-      {
-        email: existingUser.email,
-        id: existingUser._id,
-      },
+      { email: existingUser.email, id: existingUser._id },
       SECURE_KEY,
       { expiresIn: "1h" }
     );
 
     res.status(200).json({
-      message: "User Logged In Successfully",
-      user: existingUser,
-      token: token,
+      message: "User logged in successfully",
+      user: {
+        id: existingUser._id,
+        username: existingUser.username,
+        email: existingUser.email,
+      },
+      token,
     });
   } catch (error) {
-    console.log("error: ", error);
-    res.status(500).json({ message: "Something went wrong" });
+    console.error("Signin Error:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
