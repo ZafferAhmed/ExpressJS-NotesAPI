@@ -7,6 +7,7 @@ const PORT = process.env.PORT || 3000;
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+app.options("*", cors());
 const swaggerUi = require("swagger-ui-express");
 const swaggerJsdoc = require("swagger-jsdoc");
 
@@ -14,12 +15,12 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: "*", // You can replace "*" with your frontend domain if needed
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
   })
 );
-
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use("/users", userRouter);
 app.use("/notes", noteRouter);
@@ -53,7 +54,16 @@ const swaggerOptions = {
 };
 
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
-app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+app.use(
+  "/swagger",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerDocs, {
+    explorer: true,
+    swaggerOptions: {
+      tryItOutEnabled: true,
+    },
+  })
+);
 
 app.get("/", (req, res) => {
   res.send(

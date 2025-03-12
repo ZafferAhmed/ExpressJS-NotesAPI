@@ -20,7 +20,7 @@ const auth = require("../middleWares/auth");
  * /notes:
  *   get:
  *     summary: Get all notes
- *     tags: 
+ *     tags:
  *       - Notes
  *     security:
  *       - BearerAuth: []
@@ -39,7 +39,7 @@ noteRoutes.get("/", auth, getNotes);
  * /notes:
  *   post:
  *     summary: Create a new note
- *     tags: 
+ *     tags:
  *       - Notes
  *     security:
  *       - BearerAuth: []
@@ -52,7 +52,7 @@ noteRoutes.get("/", auth, getNotes);
  *             properties:
  *               title:
  *                 type: string
- *               content:
+ *               description:
  *                 type: string
  *     responses:
  *       201:
@@ -71,7 +71,7 @@ noteRoutes.post("/", auth, createNote);
  * /notes/{id}:
  *   put:
  *     summary: Update a note completely
- *     tags: 
+ *     tags:
  *       - Notes
  *     security:
  *       - BearerAuth: []
@@ -82,9 +82,9 @@ noteRoutes.post("/", auth, createNote);
  *         schema:
  *           type: string
  *         description: ID of the note to update
- *     requestBody:
+  *     requestBody:
  *       required: true
- *       description:
+ *       content:
  *         application/json:
  *           schema:
  *             type: object
@@ -112,7 +112,7 @@ noteRoutes.put("/:id", auth, updateNotes);
  * /notes/{id}:
  *   patch:
  *     summary: Partially update a note
- *     tags: 
+ *     tags:
  *       - Notes
  *     security:
  *       - BearerAuth: []
@@ -123,7 +123,7 @@ noteRoutes.put("/:id", auth, updateNotes);
  *         schema:
  *           type: string
  *         description: ID of the note to update
- *     requestBody:
+  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
@@ -155,7 +155,7 @@ noteRoutes.patch("/:id", auth, updateNotes);
  * /notes/{id}:
  *   delete:
  *     summary: Delete a note
- *     tags: 
+ *     tags:
  *       - Notes
  *     security:
  *       - BearerAuth: []
