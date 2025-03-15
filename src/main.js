@@ -37,7 +37,13 @@ const swaggerOptions = {
       { name: "Users", description: "Operations related to users" },
       { name: "Notes", description: "Operations related to notes" },
     ],
-    servers: [{ url: "http://localhost:3000" }],
+    servers: [
+      { url: "http://localhost:3000", description: "Local development server" },
+      {
+        url: "https://expressjs-notesapi.onrender.com",
+        description: "Production server",
+      },
+    ],
     components: {
       securitySchemes: {
         BearerAuth: {
