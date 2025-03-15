@@ -37,15 +37,42 @@ const swaggerOptions = {
       { name: "Users", description: "Operations related to users" },
       { name: "Notes", description: "Operations related to notes" },
     ],
-    servers: [
-      { url: "https://expressjs-notesapi.onrender.com" }, // ✅ Add "https://"
-    ],
+    servers: [{ url: "http://localhost:3000" }],
     components: {
       securitySchemes: {
         BearerAuth: {
           type: "http",
           scheme: "bearer",
           bearerFormat: "JWT",
+        },
+      },
+      schemas: {
+        User: {
+          type: "object",
+          properties: {
+            _id: {
+              type: "string",
+              description: "The auto-generated ID of the user",
+            },
+            username: {
+              type: "string",
+              description: "The username of the user",
+            },
+            email: {
+              type: "string",
+              description: "The email of the user",
+            },
+            createdAt: {
+              type: "string",
+              format: "date-time",
+              description: "The date and time when the user was created",
+            },
+            updatedAt: {
+              type: "string",
+              format: "date-time",
+              description: "The date and time when the user was last updated",
+            },
+          },
         },
       },
     },
@@ -74,10 +101,11 @@ app.get("/", (req, res) => {
 mongoose
   .connect(process.env.MONGO_URL)
   .then(() => {
+    console.log("Connected to MongoDB");
     app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
     });
   })
   .catch((error) => {
-    console.log(error);
+    console.log("MongoDB connection error:", error);
   });

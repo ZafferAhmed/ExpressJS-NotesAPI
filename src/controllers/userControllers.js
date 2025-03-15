@@ -15,6 +15,12 @@ const signUp = async (req, res) => {
   email = email?.trim();
   password = password?.trim();
 
+  if (!SECURE_KEY) {
+    return res
+      .status(500)
+      .json({ message: "Server error: missing SECURE_KEY" });
+  }
+
   if (!username || !email || !password) {
     return res.status(400).json({ message: "All fields are required" });
   }
@@ -56,7 +62,7 @@ const signUp = async (req, res) => {
       token,
     });
   } catch (error) {
-    console.error("Signup Error:", error);
+    console.error("Signup Error:", error.message || error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -112,4 +118,14 @@ const signIn = async (req, res) => {
   }
 };
 
-module.exports = { signUp, signIn };
+const getAllUsers = async (req, res) => {
+  try {
+    const users = await userModels.find({}, { password: 0 }); // Exclude password field
+    res.status(200).json(users);
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+module.exports = { signUp, signIn, getAllUsers };
